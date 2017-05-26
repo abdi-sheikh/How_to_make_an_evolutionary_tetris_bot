@@ -152,7 +152,7 @@ document.onLoad = initialize();
 
 
 //key options
-window.onkeydown = function () {
+window.onkeydown = function (event) {
 
 	var characterPressed = String.fromCharCode(event.keyCode);
 	if (event.keyCode == 38) {
