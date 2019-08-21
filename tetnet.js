@@ -33,6 +33,10 @@ var shapes = {
 	Z: [[7,7,0], [0,7,7], [0,0,0]]
 };
 
+var scores = {};
+
+scores[0] = [];
+
 //Block colors
 var colors = ["F92338", "C973FF", "1C76BC", "FEE356", "53D504", "36E0FF", "F8931D"];
 
@@ -80,7 +84,7 @@ var inspectMoveSelection = false;
 
 //GENETIC ALGORITHM VALUES
 //stores number of genomes, init at 50 
-var populationSize = 50;
+var populationSize = 25;
 //stores genomes
 var genomes = [];
 //index of current genome in genomes array
@@ -249,6 +253,11 @@ window.onkeydown = function (event) {
  * Evaluates the next genome in the population. If there is none, evolves the population.
  */
  function evaluateNextGenome() {
+
+  if (currentGenome > -1) {
+    scores[generation].push(clone(score));
+  }
+
  	//increment index in genome array
  	currentGenome++;
  	//If there is none, evolves the population.
@@ -268,11 +277,13 @@ window.onkeydown = function (event) {
  */
  function evolve() {
 
- 	console.log("Generation " + generation + " evaluated.");
+ 	//console.log("Generation " + generation + " evaluated.");
  	//reset current genome for new generation
  	currentGenome = 0;
  	//increment generation
+ 	console.log(scores);
  	generation++;
+  scores[generation] = [];
  	//resets the game
  	reset();
  	//gets the current game state
@@ -283,7 +294,7 @@ window.onkeydown = function (event) {
  	});
  	//add a copy of the fittest genome to the elites list
  	archive.elites.push(clone(genomes[0]));
- 	console.log("Elite's fitness: " + genomes[0].fitness);
+ 	//console.log("Elite's fitness: " + genomes[0].fitness);
 
  	//remove the tail end of genomes, focus on the fittest
  	while(genomes.length > populationSize / 2) {
@@ -316,7 +327,7 @@ window.onkeydown = function (event) {
 	archive.genomes = clone(genomes);
 	//and set current gen
 	archive.currentGeneration = clone(generation);
-	console.log(JSON.stringify(archive));
+	//console.log(JSON.stringify(archive));
 	//store archive, thanks JS localstorage! (short term memory)
 	localStorage.setItem("archive", JSON.stringify(archive));
 }
